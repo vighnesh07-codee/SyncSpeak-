@@ -1,23 +1,9 @@
 import express from "express";
+import { forgot, login, logout, signup } from "../controllers/auth.controllers.js";
 
-const massegerouter = express.Router();
-
-
-app.get("signup", (req,res) => {
-    res.send("signup endpoint")
-})
-
-app.get("/login", (req,res) => {
-    res.send("login endpoint")
-})
+const router = express.Router();
 
 
-app.get("/logout", (req,res) => {
-    res.send("logout endpoint")
-})
 
-app.get("/forgot", (req,res) => {
-    res.send("update endpoint")
-})
 
-export default massegerouter;
+export default router;
