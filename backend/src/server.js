@@ -12,9 +12,13 @@ const app = express();
 const server = http.createServer(app);
 
 // Determine frontend URL based on environment
-const FRONTEND_URL = process.env.NODE_ENV === "production" 
-  ? process.env.FRONTEND_URL || "http://localhost:5173"
-  : "http://localhost:5173";
+let FRONTEND_URL;
+if (process.env.NODE_ENV === "production") {
+  FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+} else {
+  // In development, allow any localhost port (Vite auto-selects ports)
+  FRONTEND_URL = /^http:\/\/localhost:\d+$|^http:\/\/127\.0\.0\.1:\d+$/;
+}
 
 const io = new Server(server, {
   cors: {
