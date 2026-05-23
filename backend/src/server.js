@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authroutes);
-app.use("/api/message", messageroutes);
+app.use("/api/messages", messageroutes);
 
 // Socket.io connection handling
 const userSocketMap = {};

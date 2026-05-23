@@ -1,22 +1,22 @@
 import { useEffect } from "react";
-import { useAuthStore } from "../store/useAuthStore";
+import { useChatStore } from "../store/useChatStore";
 import ChatHeader from "../components/ChatHeader";
 import MessageInput from "../components/MessageInput";
 import MessageList from "../components/MessageList";
 import Sidebar from "../components/Sidebar";
 
 function ChatPage() {
-  const { selectedUser, getUsers, users, messages, getMessages } = useAuthStore();
+  const { selectedUser, getAllContacts, messages, getMessagesByUserId } = useChatStore();
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    getAllContacts();
+  }, [getAllContacts]);
 
   useEffect(() => {
     if (selectedUser?._id) {
-      getMessages(selectedUser._id);
+      getMessagesByUserId(selectedUser._id);
     }
-  }, [selectedUser, getMessages]);
+  }, [selectedUser, getMessagesByUserId]);
 
   return (
     <div className="h-screen bg-slate-900 flex">

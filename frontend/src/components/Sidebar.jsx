@@ -2,9 +2,11 @@ import { MessageCircle, LogOut, Search } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/useAuthStore";
+import { useChatStore } from "../store/useChatStore";
 
 function Sidebar() {
-  const { users, selectedUser, setSelectedUser, logout, authUser } = useAuthStore();
+  const { logout, authUser } = useAuthStore();
+  const { chats, selectedUser, setSelectedUser } = useChatStore();
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleLogout = async () => {
@@ -16,7 +18,7 @@ function Sidebar() {
     }
   };
 
-  const filteredUsers = users.filter((user) =>
+  const filteredUsers = (chats || []).filter((user) =>
     user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
