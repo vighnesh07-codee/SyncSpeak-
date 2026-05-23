@@ -1,24 +1,62 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import authroutes from "./routes/auth.route.js";
 import messageroutes from "./routes/message.route.js";
 import {connectDB} from "./lib/db.js"
 import cookieParser from "cookie-parser";
+import { Server } from "socket.io";
+import http from "http";
 
+const app = express();
+const server = http.createServer(app);
 
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true,
+  },
+});
 
+const PORT = process.env.PORT || 5000;
 
-const app = express()
+// CORS middleware
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
 
-const PORT = process.env.PORT || 3000
-
-app.use(express.json()) //req.body
+app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/auth",authroutes)
-app.use("/api/message",messageroutes)
+app.use("/api/auth", authroutes);
+app.use("/api/message", messageroutes);
 
-app.listen( PORT , () => {
-    console.log(`server is running on port ${PORT}`)
-    connectDB()
-})
+// Socket.io connection handling
+const userSocketMap = {};
+
+io.on("connection", (socket) => {
+  const userId = socket.handshake.query.userId;
+
+  if (userId) userSocketMap[userId] = socket.id;
+
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+  socket.on("disconnect", () => {
+    delete userSocketMap[userId];
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  });
+});
+
+const startServer = async () => {
+    await connectDB();
+    
+    server.listen(PORT, () => {
+        console.log(`✅ Server is running on port ${PORT}`);
+    });
+};
+
+startServer().catch(err => {
+    console.error("❌ Failed to start server:", err.message);
+    process.exit(1);
+});
