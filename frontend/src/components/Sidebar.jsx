@@ -6,7 +6,7 @@ import { useChatStore } from "../store/useChatStore";
 
 function Sidebar() {
   const { logout, authUser } = useAuthStore();
-  const { chats, selectedUser, setSelectedUser } = useChatStore();
+  const { allContacts, selectedUser, setSelectedUser } = useChatStore();
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleLogout = async () => {
@@ -18,8 +18,8 @@ function Sidebar() {
     }
   };
 
-  const filteredUsers = (chats || []).filter((user) =>
-    user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = (allContacts || []).filter((user) =>
+    user.fullname.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -30,7 +30,7 @@ function Sidebar() {
           <h1 className="text-white font-bold text-xl">Sync Speak</h1>
         </div>
         <div className="text-sm text-slate-400">
-          Welcome, <span className="text-white font-semibold">{authUser?.fullName}</span>
+          Welcome, <span className="text-white font-semibold">{authUser?.fullname}</span>
         </div>
       </div>
 
@@ -66,14 +66,14 @@ function Sidebar() {
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <img
-                    src={user.profilePic || "/avatar-placeholder.png"}
-                    alt={user.fullName}
+                    src={user.profilepic || "/avatar-placeholder.png"}
+                    alt={user.fullname}
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-slate-800" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium truncate">{user.fullName}</p>
+                  <p className="text-white font-medium truncate">{user.fullname}</p>
                   <p className="text-xs text-slate-400 truncate">Online</p>
                 </div>
               </div>
